@@ -16,12 +16,16 @@ def main():
     # delta time
     dt = 0
 
-    # middle of the screen
-    x = SCREEN_WIDTH / 2
-    y = SCREEN_HEIGHT / 2
+    # groups
+
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    # add player to the drawable and updatable sprite groups
+    Player.containers = (updatable, drawable)
 
     # create a player object, see player.py
-    player = Player(x, y, PLAYER_RADIUS)
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS)
 
     # main game loop
     while True:
@@ -32,12 +36,14 @@ def main():
         
         # paint the screen background black
         screen.fill("black")
+        
+        # run update on updatable group
+        for obj in updatable:
+            obj.update(dt)
 
-        player.update(dt)
-        print(player.rotation)
-
-        # draw the player on the screen, above the black
-        player.draw(screen)
+        # run draw on drawable group
+        for obj in drawable:
+            obj.draw(screen)
 
         # runs a frame buffer flip
         pygame.display.flip()
