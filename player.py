@@ -7,7 +7,7 @@ from constants import *
 # to represent the player as a circle, but they are drawn as a triangle
 # collision detection is done using a circle, apparently the math is easier
 class Player(CircleShape):
-    def init(self, x, y):
+    def __init__(self, x, y, PLAYER_RADIUS):
         # using super inherits all methods and properties of the parent class
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
