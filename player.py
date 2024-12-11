@@ -2,6 +2,7 @@ import pygame
 
 from circleshape import CircleShape
 from constants import *
+from shot import Shot
 
 # inherit player from circleshape
 # to represent the player as a circle, but they are drawn as a triangle
@@ -11,6 +12,7 @@ class Player(CircleShape):
         # using super inherits all methods and properties of the parent class
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
+        self.shoot_cooldown = 0
 
     # in the player class
     def triangle(self):
@@ -31,7 +33,20 @@ class Player(CircleShape):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
 
+    def shoot(self):
+        # part of the shoot limiter
+        # each time we can shoot, reset the cooldown
+        self.shoot_cooldown = PLAYER_SHOOT_COOLDOWN
+        
+        velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        shot = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+        shot.velocity = velocity
+
     def update(self, dt):
+        # part of the shoot limiter
+        # takes away dt each update
+        self.shoot_cooldown -= dt
+
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -45,3 +60,12 @@ class Player(CircleShape):
 
         if keys[pygame.K_s]:
             self.move(-dt)
+        
+        if keys[pygame.K_SPACE]:
+            # part of the shoot limiter
+            # if not negative, shoot
+            if self.shoot_cooldown > 0:
+                pass
+            else:
+            # otherwise shoot
+                self.shoot()
