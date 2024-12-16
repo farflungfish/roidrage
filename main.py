@@ -27,7 +27,7 @@ def main():
     shots = pygame.sprite.Group()
 
     # add shots to containers
-    Shot.containers = (updatable, drawable)
+    Shot.containers = (updatable, drawable, shots)
 
     # add player to the drawable and updatable sprite groups
     Player.containers = (updatable, drawable)
@@ -62,6 +62,13 @@ def main():
             if obj.is_colliding(player):
                 print("Game over!")
                 exit()
+
+        # check for collisions between asteroids and shots
+        for roid in asteroids:
+            for shot in shots:
+                if roid.is_colliding(shot):
+                    roid.split()
+                    shot.kill()
 
         # run draw on drawable group
         for obj in drawable:
